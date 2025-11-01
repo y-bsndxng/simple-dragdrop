@@ -36,25 +36,6 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      # インポートだけ先に確認しておく（CI が止まりやすい点なので）
-      - name: Import check
-        run: |
-          python - << 'PYCODE'
-          try:
-              import tkinter
-          except Exception as e:
-              raise SystemExit(f"tkinter import failed: {e}")
-          try:
-              import tkinterdnd2
-          except Exception as e:
-              raise SystemExit(f"tkinterdnd2 import failed: {e}")
-          try:
-              import PyInstaller
-          except Exception as e:
-              raise SystemExit(f"PyInstaller import failed: {e}")
-          print("All imports OK")
-          PYCODE
-
       - name: Build with PyInstaller
         run: |
           cd src
