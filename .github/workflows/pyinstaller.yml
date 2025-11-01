@@ -40,7 +40,7 @@ jobs:
         run: |
           cd src
           pyinstaller main.py \
-            --name my_app \
+            --name simple-dragdrop \
             --onefile \
             --noconsole
         shell: bash
@@ -50,21 +50,21 @@ jobs:
         if: runner.os != 'Windows'
         run: |
           cd src/dist
-          zip -r my_app-${{ runner.os }}-py${{ matrix.python-version }}.zip my_app
+          zip -r simple-dragdrop-${{ runner.os }}-py${{ matrix.python-version }}.zip simple-dragdrop
 
       - name: Package artifact (Windows)
         if: runner.os == 'Windows'
         run: |
           cd src\dist
-          powershell Compress-Archive -Path my_app.exe -DestinationPath my_app-${{ runner.os }}-py${{ matrix.python-version }}.zip
+          powershell Compress-Archive -Path simple-dragdrop.exe -DestinationPath simple-dragdrop-${{ runner.os }}-py${{ matrix.python-version }}.zip
 
       # リリースに添付するために一度アップロード（ジョブ間で使うとき用）
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: my_app-${{ matrix.os }}-py${{ matrix.python-version }}
+          name: simple-dragdrop-${{ matrix.os }}-py${{ matrix.python-version }}
           path: |
-            src/dist/my_app-*.zip
+            src/dist/simple-dragdrop-*.zip
 
   release:
     # build が全部終わってから
