@@ -1,10 +1,10 @@
-name: Build and Release (PyInstaller)
+name: Build with PyInstaller
 
 on:
-  # タグを push したときにだけリリースする
   push:
-    tags:
-      - "v*"
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
   build:
@@ -24,14 +24,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      # Linux だけ Tk を入れる
+      # Ubuntu は tkinter が標準で入っていないことがあるので先に入れる
       - name: Install Tk (Linux only)
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y python3-tk
 
-      - name: Install deps from requirements.txt
+      - name: Install from requirements.txt
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
@@ -45,23 +45,16 @@ jobs:
             --noconsole
         shell: bash
 
-      # OSごとにzipにする
-      - name: Package artifact (Linux/Mac)
+      - name: Upload artifact (Linux/Mac)
         if: runner.os != 'Windows'
-        run: |
-          cd src/dist
-          zip -r simple-dragdrop-${{ runner.os }}-py${{ matrix.python-version }}.zip simple-dragdrop
-
-      - name: Package artifact (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          cd src\dist
-          powershell Compress-Archive -Path simple-dragdrop.exe -DestinationPath simple-dragdrop-${{ runner.os }}-py${{ matrix.python-version }}.zip
-
-      # リリースに添付するために一度アップロード（ジョブ間で使うとき用）
-      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: simple-dragdrop-${{ matrix.os }}-py${{ matrix.python-version }}
-          path: |
-            src/dist/simple-dragdrop-*.zip
+          path: src/dist/simple-dragdrop
+
+      - name: Upload artifact (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: simple-dragdrop-${{ matrix.os }}-py${{ matrix.python-version }}
+          path: src/dist/simple-dragdrop.exe
