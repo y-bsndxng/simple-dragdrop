@@ -23,6 +23,8 @@ cd tkinter-dnd-sample
 pip install -r requirements.txt
 ```
 
+---
+
 ## ライセンス
 
 MIT License
