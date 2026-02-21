@@ -21,6 +21,9 @@ class MyApp(TkinterDnD.Tk):
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
 
+        # ESCキーイベント
+        self.bind("<Escape>", lambda e: self.destroy())
+
 class FrameDragAndDrop(tk.LabelFrame):
     def __init__(self, parent):
         super().__init__(parent)
@@ -41,9 +44,6 @@ class FrameDragAndDrop(tk.LabelFrame):
         self.scrollbar.grid(row=0, column=1, sticky=(tk.N, tk.S))
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
-
-        # ESCキーイベント
-        self.bind("<Escape>", lambda e: self.destroy())
 
     def func_dad(self, e):
         # ここを編集してください
